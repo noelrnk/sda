@@ -124,17 +124,17 @@ with tab5:
                     "Stadium. The match ended with a 5-0 victory for Arsenal. The following plot shows the passes of "
                     "each player of this match.")
         if selected_team == 'Chelsea FCW':
-            st.pyplot(vz.create_pass_map('Chelsea FCW'))
+            st.pyplot(vz.create_pass_map('first', 'home'))
         if selected_team == 'Arsenal WFC':
-            st.pyplot(vz.create_pass_map('Arsenal WFC'))
+            st.pyplot(vz.create_pass_map('first', 'away'))
 
     if selected_match == 'Arsenal (1) - Chelsea (2): 13.01.2019 13:30':
         st.markdown("The match between Arsenal and Chelsea took place on the 13th of January 2019 at Meadow Park. "
                     "The following plot shows the passes of each player of this match.")
         if selected_team == 'Chelsea FCW':
-            st.pyplot(vz.create_pass_map(df_events_18_19_afc, 'Chelsea FCW'))
+            st.pyplot(vz.create_pass_map('second', 'away'))
         if selected_team == 'Arsenal WFC':
-            st.pyplot(vz.create_pass_map(df_events_18_19_afc, 'Arsenal WFC'))
+            st.pyplot(vz.create_pass_map('second', 'home'))
 
 
 # TAB 6: INSTRUCTIONS AND DATA SOURCES

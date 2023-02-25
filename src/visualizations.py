@@ -9,6 +9,7 @@ import plotly.graph_objs as go
 import plotly.graph_objects as go
 import plotly.express as px
 import warnings
+import streamlit as st
 
 df_events_18_19_cfc = pd.read_csv('data/events_18_19_cfc.csv')
 df_events_18_19_afc = pd.read_csv('data/events_18_19_afc.csv')
@@ -17,6 +18,7 @@ df_match_week_cfc_18_19 = dp.generate_match_week_df(df_events_18_19_cfc, 'Chelse
 df_match_week_afc_18_19 = dp.generate_match_week_df(df_events_18_19_afc, 'Arsenal WFC')
 
 
+@st.cache_data
 def plot_ind_match_week(df, variables_lst):
     # Create a line plot for each variable in the list
     fig = px.line(df, x='MatchWeek', y=variables_lst, labels={'variable': 'Statistic'},
@@ -36,6 +38,7 @@ def plot_ind_match_week(df, variables_lst):
     return fig
 
 
+@st.cache_data
 def plot_match_week_team_comp(df1, df2, variable):
     # Add a team_name column to each DataFrame
     df1['team_name'] = 'Chelsea FCW'
@@ -61,6 +64,7 @@ def plot_match_week_team_comp(df1, df2, variable):
     return fig
 
 
+@st.cache_data
 def create_pressure_maps(df, team_name):
     # filter chelsea pressure events
     mask_chelsea_pressure = (df.team_name == team_name) & (df.type_name == 'Pressure')
@@ -91,6 +95,7 @@ def create_pressure_maps(df, team_name):
     return fig
 
 
+@st.cache_data
 def create_shot_map(df, team_name):
     if team_name == 'Chelsea FCW':
         df_shots = df[(df.type_name == 'Shot') & (df.team_name == 'Chelsea FCW')].copy()
@@ -157,11 +162,12 @@ def create_shot_map(df, team_name):
     return fig
 
 
-def create_pass_map(team_name):
-    if team_name == 'Chelsea FCW':
-        number = 19785
-    elif team_name == 'Arsenal WFC':
+@st.cache_data
+def create_pass_map(match_day, location):
+    if match_day == 'first':
         number = 19736
+    elif match_day == 'second':
+        number = 19785
     parser = Sbopen()
     events, related, freeze, tactics = parser.event(number)
     lineup = parser.lineup(number)
@@ -206,10 +212,22 @@ def create_pass_map(team_name):
     lineup['start'] = lineup.player_id.isin(starting_players)
     lineup.sort_values(['team_name', 'start', 'on', 'position_id'],
                        ascending=[True, False, True, True], inplace=True)
-    # if you want the other team set team = team2
-    team1, team2 = lineup.team_name.unique()
-    team = team1
-    lineup_team = lineup[lineup.team_name == team].copy()
+    if number == 19785:
+        # if you want the other team set team = team2
+        team1, team2 = lineup.team_name.unique()
+        if location == 'home':
+            team = team1
+        elif location == 'away':
+            team = team2
+        lineup_team = lineup[lineup.team_name == team].copy()
+    elif number == 19736:
+        # if you want the other team set team = team2
+        team1, team2 = lineup.team_name.unique()
+        if location == 'home':
+            team = team2
+        elif location == 'away':
+            team = team1
+        lineup_team = lineup[lineup.team_name == team].copy()
 
     # filter the events to exclude some set pieces
     set_pieces = ['Throw-in', 'Free Kick', 'Corner', 'Kick Off', 'Goal Kick']
@@ -238,9 +256,6 @@ def create_pass_map(team_name):
     fm_scada = FontManager('https://raw.githubusercontent.com/googlefonts/scada/main/fonts/ttf/'
                            'Scada-Regular.ttf')
 
-
-    # filtering out some highlight_text warnings - the warnings aren't correct as the
-    # text fits inside the axes.
     warnings.simplefilter("ignore", UserWarning)
 
     # plot the 5 * 3 grid
@@ -270,14 +285,6 @@ def create_pass_map(team_name):
                          color='#7065bb', width=2, headwidth=4, headlength=6, ax=ax)
 
             # plot the title for each player axis
-            # here we use f-strings to combine the variables from the dataframe and text
-            # we plot the title at x=0, y=-5
-            # this is the left hand-side of the pitch (x=0) and between
-            # top of the y-axis (y=0) and the top of the padding (y=-10, remember pad_top = 10)
-            # note that the StatsBomb y-axis is inverted, so you may need
-            # to change this if you use another pitch_type (e.g. 'uefa').
-            # We also use the highlight-text package to highlight complete_pass green
-            # so put <> around the number of completed passes.
             total_pass = len(complete_pass) + len(incomplete_pass)
             annotation_string = (f'{lineup_player.position_abbreviation} | '
                                  f'{lineup_player.player_name} | '

@@ -3,6 +3,7 @@ from mplsoccer import Sbopen
 import os.path
 import os
 from collections import defaultdict
+import streamlit as st
 
 
 def get_team_matches(parser, competition_id, season_id, team_name):
@@ -27,7 +28,7 @@ def add_match_date(df_events, df_season):
 
 
 ####################################################################################
-''' LOAD EVENTS DATA '''
+# LOAD EVENTS DATA
 ####################################################################################
 
 folder_name = "data"
@@ -69,7 +70,7 @@ def load_data(file, season_id, team_name, df_name_prefix, df_events_prefix, pars
 
 
 ####################################################################################
-''' CREATE DATAFRAME WITH DATA GROUPED BY MATCH WEEK '''
+# CREATE DATAFRAME WITH DATA GROUPED BY MATCH WEEK
 ####################################################################################
 
 
@@ -132,7 +133,7 @@ def generate_match_week_df(df, team_name):
 
 
 ####################################################################################
-''' VARIABLE DESCRIPTIONS '''
+# VARIABLE DESCRIPTIONS
 ####################################################################################
 
 
