@@ -8,8 +8,7 @@ from collections import defaultdict
 def get_team_matches(parser, competition_id, season_id, team_name):
     # Get all the matches
     df_season = parser.match(competition_id=competition_id, season_id=season_id)
-    df_team = df_season[(df_season['home_team_name'] == team_name) |
-                      (df_season['away_team_name'] == team_name)]
+    df_team = df_season[(df_season['home_team_name'] == team_name) | (df_season['away_team_name'] == team_name)]
     return df_team
 
 
@@ -79,7 +78,8 @@ def get_match_week_stat(df, team_name, variable):
     match_weeks = range(df["match_week"].min(), df["match_week"].max() + 1)
     dct = defaultdict(int)
     for match_week in match_weeks:
-        dct[match_week] = df[(df["match_week"] == match_week) & (df["team_name"] == team_name) & ((df["outcome_name"] == variable) | (df["type_name"] == variable))].shape[0]
+        dct[match_week] = df[(df["match_week"] == match_week) & (df["team_name"] == team_name) &
+                             ((df["outcome_name"] == variable) | (df["type_name"] == variable))].shape[0]
     df = pd.DataFrame.from_dict(dict(dct), orient='index', columns=[variable])
     return df[variable].tolist()
 
@@ -90,18 +90,23 @@ def get_match_week_stat_op(df, team_name, variable):
     match_weeks = range(df["match_week"].min(), df["match_week"].max() + 1)
     dct = defaultdict(int)
     for match_week in match_weeks:
-        dct[match_week] = df[(df["match_week"] == match_week) & (df["team_name"] != team_name) & ((df["outcome_name"] == variable) | (df["type_name"] == variable))].shape[0]
+        dct[match_week] = df[(df["match_week"] == match_week) &
+                             (df["team_name"] != team_name) &
+                             ((df["outcome_name"] == variable) | (df["type_name"] == variable))].shape[0]
     df = pd.DataFrame.from_dict(dict(dct), orient='index', columns=[variable])
     return df[variable].tolist()
 
 
 def get_match_week_stat_nested_calc(df, team_name, event_type, var_type, calc):
     if calc == 'count':
-        return df[(df['type_name'] == event_type) & (df['team_name'] == team_name)].groupby('match_week').count()[var_type].tolist()
+        return df[(df['type_name'] == event_type) &
+                  (df['team_name'] == team_name)].groupby('match_week').count()[var_type].tolist()
     elif calc == 'sum':
-        return df[(df['type_name'] == event_type) & (df['team_name'] == team_name)].groupby('match_week').sum()[var_type].tolist()
+        return df[(df['type_name'] == event_type) &
+                  (df['team_name'] == team_name)].groupby('match_week').sum()[var_type].tolist()
     elif calc == 'mean':
-        return df[(df['type_name'] == event_type) & (df['team_name'] == team_name)].groupby('match_week').mean()[var_type].tolist()
+        return df[(df['type_name'] == event_type) &
+                  (df['team_name'] == team_name)].groupby('match_week').mean()[var_type].tolist()
 
 
 def generate_match_week_df(df, team_name):

@@ -253,8 +253,7 @@ def create_pass_map(match_day, location):
                      connectionstyle="arc3,rad=-0.8", fc="red", ec="red")
 
     # a fontmanager object for using a google font
-    fm_scada = FontManager('https://raw.githubusercontent.com/googlefonts/scada/main/fonts/ttf/'
-                           'Scada-Regular.ttf')
+    fm_scada = FontManager('https://raw.githubusercontent.com/googlefonts/scada/main/fonts/ttf/Scada-Regular.ttf')
 
     warnings.simplefilter("ignore", UserWarning)
 
