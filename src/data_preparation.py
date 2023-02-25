@@ -113,18 +113,16 @@ def generate_match_week_df(df, team_name):
     shots_saved_lst = get_match_week_stat(df, team_name, 'Saved')
     xg_lst = df.groupby('match_week').sum()['shot_statsbomb_xg'].to_list()
     subs_lst = get_match_week_stat(df, team_name, 'Substitution')
-    offs_lst = get_match_week_stat(df, team_name, 'Offside')
     clear_lst = get_match_week_stat(df, team_name, 'Clearance')
     pass_length_lst = get_match_week_stat_nested_calc(df, team_name, 'Pass', 'pass_length', 'sum')
     pass_length_avg_lst = get_match_week_stat_nested_calc(df, team_name, 'Pass', 'pass_length', 'mean')
     pass_cnt_lst = get_match_week_stat_nested_calc(df, team_name, 'Pass', 'pass_length', 'count')
 
     df = pd.DataFrame(list(zip(goals_lst, goals_conceded_lst, shots_lst, off_target_lst, shot_blocked_lst,
-                               shots_saved_lst, xg_lst, subs_lst, offs_lst, clear_lst, pass_length_lst,
-                               pass_length_avg_lst, pass_cnt_lst)),
+                               shots_saved_lst, xg_lst, subs_lst, clear_lst, pass_length_lst, pass_length_avg_lst,
+                               pass_cnt_lst)),
                       columns=['GoalsScored', 'GoalsConceded', 'Shots', 'ShotOffT', 'ShotsBlocked', 'ShotsSaved',
-                               'ShotXG', 'Substitutions', 'Offsides', 'Clearances', 'PassLengthSum', 'PassLengthAvg',
-                               'PassCnt'])
+                               'ShotXG', 'Substitutions', 'Clearances', 'PassLengthSum', 'PassLengthAvg', 'PassCnt'])
 
     df = df.reset_index()
     df.rename(columns={'index': 'MatchWeek'}, inplace=True)
@@ -145,8 +143,6 @@ def get_variable_descriptions():
         ('ShotsBlocked', 'Number of shots blocked'),
         ('ShotsSaved', 'Number of shots saved'),
         ('ShotXG', 'Expected goals for shots'),
-        ('Substitutions', 'Number of substitutions'),
-        ('Offsides', 'Number of offsides'),
         ('Clearances', 'Number of clearances'),
         ('PassLengthSum', 'Sum of pass lengths'),
         ('PassLengthAvg', 'Average pass length'),

@@ -50,11 +50,9 @@ with tab2:
         col1, col2 = st.columns([2, 2])
         with col1:
             stats_lst = st.multiselect(label='Select the variables',
-                                       options=['GoalsScored', 'GoalsConceded', 'Shots',
-                                                'ShotOffT', 'ShotsBlocked', 'ShotsSaved',
-                                                'ShotXG', 'Substitutions', 'Offsides',
-                                                'Clearances', 'PassLengthSum', 'PassLengthAvg',
-                                                'PassCnt', 'ShotsOnT', 'OffIndex'])
+                                       options=['GoalsScored', 'GoalsConceded', 'Shots', 'ShotOffT', 'ShotsBlocked',
+                                                'ShotsSaved', 'ShotXG', 'Clearances', 'PassLengthSum', 'PassLengthAvg',
+                                                'PassCnt', 'ShotsOnT'])
         with col2:
             team_selection = st.selectbox(label='Select the team', options=['Arsenal WFC', 'Chelsea FCW'])
         if team_selection == 'Arsenal WFC':
@@ -72,9 +70,8 @@ with tab3:
     with st.expander("**Team Comparison**", expanded=True):
         stat = st.selectbox(label='Select the variable', options=['GoalsScored', 'GoalsConceded', 'Shots',
                                                                   'ShotOffT', 'ShotsBlocked', 'ShotsSaved',
-                                                                  'ShotXG', 'Substitutions', 'Offsides',
-                                                                  'Clearances', 'PassLengthSum', 'PassLengthAvg',
-                                                                  'PassCnt', 'ShotsOnT'])
+                                                                  'ShotXG', 'Clearances', 'PassLengthSum',
+                                                                  'PassLengthAvg', 'PassCnt', 'ShotsOnT'])
 
         st.plotly_chart(vz.plot_match_week_team_comp(df_match_week_afc_18_19, df_match_week_cfc_18_19, stat),
                         use_container_width=True)
