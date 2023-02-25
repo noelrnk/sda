@@ -3,7 +3,6 @@ from mplsoccer import Sbopen
 import os.path
 import os
 from collections import defaultdict
-import streamlit as st
 
 
 def get_team_matches(parser, competition_id, season_id, team_name):
