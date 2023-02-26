@@ -67,6 +67,15 @@ def load_data(file, season_id, team_name, df_name_prefix, df_events_prefix, pars
         globals()[df_name] = df_events
 
 
+# Load Chelsea FCW events data
+for file, season_id in zip(cfc_files_lst, season_id_lst):
+    load_data(file, season_id, 'Chelsea FCW', "df_", "df_events_", parser)
+
+# Load Arsenal WFC events data
+for file, season_id in zip(afc_files_lst, season_id_lst):
+    load_data(file, season_id, 'Arsenal WFC', "df_", "df_events_", parser)
+
+
 ####################################################################################
 # CREATE DATAFRAME WITH DATA GROUPED BY MATCH WEEK
 ####################################################################################
