@@ -1,5 +1,4 @@
 import cmasher as cmr
-import data_preparation as dp
 from highlight_text import ax_text
 import matplotlib.patheffects as path_effects
 from mplsoccer import Pitch, Sbopen, VerticalPitch, FontManager
@@ -10,12 +9,6 @@ import plotly.graph_objects as go
 import plotly.express as px
 import warnings
 import streamlit as st
-
-df_events_18_19_cfc = pd.read_csv('data/events_18_19_cfc.csv')
-df_events_18_19_afc = pd.read_csv('data/events_18_19_afc.csv')
-
-df_match_week_cfc_18_19 = dp.generate_match_week_df(df_events_18_19_cfc, 'Chelsea FCW')
-df_match_week_afc_18_19 = dp.generate_match_week_df(df_events_18_19_afc, 'Arsenal WFC')
 
 
 @st.cache_data

@@ -1,13 +1,9 @@
 import streamlit as st
 import pandas as pd
+st.set_page_config(layout="wide")
 import data_preparation as dp
 import visualizations as vz
-from mplsoccer import Sbopen
 
-# Instantiate a parser object
-parser = Sbopen()
-
-st.set_page_config(layout="wide")
 
 st.image('img/fa_women_super_league.jpg')
 st.title("FA Women's Super League Analysis")
