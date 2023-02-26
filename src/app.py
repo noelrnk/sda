@@ -5,7 +5,8 @@ import data_preparation as dp
 import visualizations as vz
 
 
-st.image('img/fa_women_super_league.jpg')
+#st.image('img/fa_women_super_league.jpg')
+st.image('https://unsplash.com/photos/ARU18GpF6QQ')
 st.title("FA Women's Super League Analysis")
 st.text('Welcome to this Streamlit app! In this dashboard, the 2018/19 season of the Arsenal WFC and the Chelsea FCW '
         'is analysed.')
