@@ -81,10 +81,11 @@ for file, season_id in zip(afc_files_lst, season_id_lst):
 def get_match_week_stat(df, team_name, variable):
     ''' Returns a list with the specified outcome count for each match week.
         If the outcome_name does not occur, the value 0 is added as value to the match_week. '''
-    match_weeks = range(df["match_week"].min(), df["match_week"].max() + 1)
+    match_weeks = range(1, df["date_number"].max() + 1)
     dct = defaultdict(int)
     for match_week in match_weeks:
-        dct[match_week] = df[(df["match_week"] == match_week) & (df["team_name"] == team_name) &
+        dct[match_week-1] = df[(df["date_number"] == match_week) &
+                             (df["team_name"] == team_name) &
                              ((df["outcome_name"] == variable) | (df["type_name"] == variable))].shape[0]
     df = pd.DataFrame.from_dict(dict(dct), orient='index', columns=[variable])
     return df[variable].tolist()
@@ -93,12 +94,11 @@ def get_match_week_stat(df, team_name, variable):
 def get_match_week_stat_op(df, team_name, variable):
     ''' Returns a list with the specified outcome count for each match week for the opposing team.
         If the outcome_name does not occur, the value 0 is added as value to the match_week. '''
-    match_weeks = range(df["match_week"].min(), df["match_week"].max() + 1)
+    match_weeks = range(df["date_number"].min(), df["date_number"].max() + 1)
     dct = defaultdict(int)
     for match_week in match_weeks:
-        dct[match_week] = df[(df["match_week"] == match_week) &
-                             (df["team_name"] != team_name) &
-                             ((df["outcome_name"] == variable) | (df["type_name"] == variable))].shape[0]
+        dct[match_week-1] = df[(df["date_number"] == match_week) &
+                             (df["team_name"] != team_name) & ((df["outcome_name"] == variable) | (df["type_name"] == variable))].shape[0]
     df = pd.DataFrame.from_dict(dict(dct), orient='index', columns=[variable])
     return df[variable].tolist()
 
@@ -106,13 +106,13 @@ def get_match_week_stat_op(df, team_name, variable):
 def get_match_week_stat_nested_calc(df, team_name, event_type, var_type, calc):
     if calc == 'count':
         return df[(df['type_name'] == event_type) &
-                  (df['team_name'] == team_name)].groupby('match_week').count()[var_type].tolist()
+                  (df['team_name'] == team_name)].groupby('date_number').count()[var_type].tolist()
     elif calc == 'sum':
         return df[(df['type_name'] == event_type) &
-                  (df['team_name'] == team_name)].groupby('match_week').sum()[var_type].tolist()
+                  (df['team_name'] == team_name)].groupby('date_number').sum()[var_type].tolist()
     elif calc == 'mean':
         return df[(df['type_name'] == event_type) &
-                  (df['team_name'] == team_name)].groupby('match_week').mean()[var_type].tolist()
+                  (df['team_name'] == team_name)].groupby('date_number').mean()[var_type].tolist()
 
 
 @st.cache_data
@@ -123,21 +123,26 @@ def generate_match_week_df(df, team_name):
     off_target_lst = get_match_week_stat(df, team_name, 'Off T')
     shot_blocked_lst = get_match_week_stat(df, team_name, 'Blocked')
     shots_saved_lst = get_match_week_stat(df, team_name, 'Saved')
-    xg_lst = df.groupby('match_week').sum()['shot_statsbomb_xg'].to_list()
+    xg_lst = df.groupby('date_number').sum()['shot_statsbomb_xg'].to_list()
     subs_lst = get_match_week_stat(df, team_name, 'Substitution')
+    offs_lst = get_match_week_stat(df, team_name, 'Offside')
     clear_lst = get_match_week_stat(df, team_name, 'Clearance')
     pass_length_lst = get_match_week_stat_nested_calc(df, team_name, 'Pass', 'pass_length', 'sum')
     pass_length_avg_lst = get_match_week_stat_nested_calc(df, team_name, 'Pass', 'pass_length', 'mean')
     pass_cnt_lst = get_match_week_stat_nested_calc(df, team_name, 'Pass', 'pass_length', 'count')
+    matches_numbered = df['date_number'].to_list()
 
     df = pd.DataFrame(list(zip(goals_lst, goals_conceded_lst, shots_lst, off_target_lst, shot_blocked_lst,
-                               shots_saved_lst, xg_lst, subs_lst, clear_lst, pass_length_lst, pass_length_avg_lst,
-                               pass_cnt_lst)),
+                               shots_saved_lst, xg_lst, subs_lst, offs_lst, clear_lst, pass_length_lst,
+                               pass_length_avg_lst, pass_cnt_lst)),
                       columns=['GoalsScored', 'GoalsConceded', 'Shots', 'ShotOffT', 'ShotsBlocked', 'ShotsSaved',
-                               'ShotXG', 'Substitutions', 'Clearances', 'PassLengthSum', 'PassLengthAvg', 'PassCnt'])
+                               'ShotXG', 'Substitutions', 'Offsides', 'Clearances', 'PassLengthSum', 'PassLengthAvg',
+                               'PassCnt'])
 
     df = df.reset_index()
     df.rename(columns={'index': 'MatchWeek'}, inplace=True)
+    df = df.set_index('MatchWeek')
+    df.index = df.index + 1
     return df
 
 

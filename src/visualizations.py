@@ -13,6 +13,9 @@ import streamlit as st
 
 @st.cache_data
 def plot_ind_match_week(df, variables_lst):
+    # Reset the index of the DataFrame and use the MatchWeek column as the x variable
+    df = df.reset_index()
+
     # Create a line plot for each variable in the list
     fig = px.line(df, x='MatchWeek', y=variables_lst, labels={'variable': 'Statistic'},
                   color_discrete_sequence=px.colors.qualitative.Dark24)
@@ -37,10 +40,14 @@ def plot_match_week_team_comp(df1, df2, variable):
     df1['team_name'] = 'Chelsea FCW'
     df2['team_name'] = 'Arsenal WFC'
 
+    df1 = df1.reset_index()
+    df2 = df2.reset_index()
     # Combine the DataFrames
-    df = pd.concat([df1, df2], ignore_index=True)
+    df = pd.concat([df1, df2], ignore_index=False)
 
-    # Create a line plot for the variable
+    # Reset the index of the DataFrame and use the MatchWeek column as the x variable
+    # df = df.reset_index()
+    # df = df.set_index('MatchWeek')
     fig = px.line(df, x='MatchWeek', y=variable, labels={'variable': 'Statistic'},
                   color='team_name', color_discrete_sequence=px.colors.qualitative.Dark24)
 
@@ -55,6 +62,7 @@ def plot_match_week_team_comp(df1, df2, variable):
     fig.update_xaxes(tickmode='linear')
 
     return fig
+
 
 
 @st.cache_data

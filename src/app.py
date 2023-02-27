@@ -14,6 +14,10 @@ st.text('Welcome to this Streamlit app! In this dashboard, the 2018/19 season of
 df_events_18_19_cfc = pd.read_csv('data/events_18_19_cfc.csv')
 df_events_18_19_afc = pd.read_csv('data/events_18_19_afc.csv')
 
+# use rank to give each date a number that increases with the date
+df_events_18_19_cfc['date_number'] = df_events_18_19_cfc['match_date'].rank(method='dense').astype(int)
+df_events_18_19_afc['date_number'] = df_events_18_19_afc['match_date'].rank(method='dense').astype(int)
+
 df_match_week_cfc_18_19 = dp.generate_match_week_df(df_events_18_19_cfc, 'Chelsea FCW')
 df_match_week_afc_18_19 = dp.generate_match_week_df(df_events_18_19_afc, 'Arsenal WFC')
 
