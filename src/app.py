@@ -48,7 +48,7 @@ with tab2:
             stats_lst = st.multiselect(label='Select the variables',
                                        options=['GoalsScored', 'GoalsConceded', 'Shots', 'ShotOffT', 'ShotsBlocked',
                                                 'ShotsSaved', 'ShotXG', 'Clearances', 'PassLengthSum', 'PassLengthAvg',
-                                                'PassCnt', 'ShotsOnT'])
+                                                'PassCnt'])
         with col2:
             team_selection = st.selectbox(label='Select the team', options=['Arsenal WFC', 'Chelsea FCW'])
         if team_selection == 'Arsenal WFC':
@@ -67,9 +67,9 @@ with tab3:
         stat = st.selectbox(label='Select the variable', options=['GoalsScored', 'GoalsConceded', 'Shots',
                                                                   'ShotOffT', 'ShotsBlocked', 'ShotsSaved',
                                                                   'ShotXG', 'Clearances', 'PassLengthSum',
-                                                                  'PassLengthAvg', 'PassCnt', 'ShotsOnT'])
+                                                                  'PassLengthAvg', 'PassCnt'])
 
-        st.plotly_chart(vz.plot_match_week_team_comp(df_match_week_afc_18_19, df_match_week_cfc_18_19, stat),
+        st.plotly_chart(vz.plot_match_week_team_comp(df_match_week_cfc_18_19, df_match_week_afc_18_19, stat),
                         use_container_width=True)
 
     with st.expander("**Variable information**", expanded=False):
